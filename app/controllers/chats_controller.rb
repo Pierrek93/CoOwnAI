@@ -7,4 +7,6 @@ class ChatsController < ApplicationController
     @message = Message.new()
   end
 
+  def create
+  end
 end
