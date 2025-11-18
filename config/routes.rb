@@ -7,12 +7,14 @@ Rails.application.routes.draw do
 
   root to: "pages#home"
 
-  resources :sections, only: [:index, :show] do
+  resources :sections, only: [:index] do
     resources :chats, only: [:create]
+  end
+
+  resources :chats, only: [:show] do
+    resources :messages, only: [:create]
   end
 
   # Defines the root path route ("/")
   # root "posts#index"
-
-  puts "hello"
 end
