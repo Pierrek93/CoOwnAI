@@ -8,7 +8,8 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-puts "Destroying all Data"
+
+puts "Destroying all Section data"
 Section.destroy_all
 
 puts"Creating Data for GDPR"
@@ -102,3 +103,15 @@ Fines up to €20 million or 4% of global turnover, plus corrective measures.
   Provide step-by-step instructions in bullet points, using Markdown.
 ",
 :name => "GDPR")
+
+puts Section.count
+
+puts "Destroying all User data"
+User.destroy_all
+User.create(email: "test@test.de", password: "123123")
+puts User.count
+
+puts "Destroying all Chats data"
+Chat.destroy_all
+Chat.create!(user: User.first, section: Section.first, title: "New chat")
+puts Chat.count
