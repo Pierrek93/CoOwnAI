@@ -18,23 +18,12 @@
 
     <div class="w-1/3">
       <div id="new_message_container">
-        <%= form_with scope: "book", url: "#", method: :post do |myform| %>
+        <%= form_with scope: "ai_messages", url: chat_messages_path(@chat), method: :post do |myform| %>
           <div>
-            <%= myform .label :title, "Title is:" %>
+            <%= myform .label :content, "Ask your question:" %>
             <%= myform.text_field :content %>
           </div>
-
-          <div>
-            <%= myform.label :text, "Text is:" %>
-            <%= myform.text_area :text %>
-          </div>
-
-          <div>
-            <%= myform.label :isbn, "Isbn is:" %>
-            <%= myform.number_field :isbn %>
-          </div>
-
-          <%= myform.submit "Search" %>
+          <%= myform.submit "Ask question" %>
         <% end %>
       </div>
     </div>
