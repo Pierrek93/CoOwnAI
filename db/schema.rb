@@ -16,7 +16,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_17_085423) do
 
   create_table "chats", force: :cascade do |t|
     t.string "title"
-    t.integer "characters"
     t.bigint "user_id", null: false
     t.bigint "section_id", null: false
     t.datetime "created_at", null: false
