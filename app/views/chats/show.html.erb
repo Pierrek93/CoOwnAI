@@ -1,0 +1,46 @@
+<div class="w-[1200px] container mx-auto">
+
+
+  <h1 class="text-5xl font-bold">Your <%= @section.name %> assistant </h1>
+
+  <div class="flex">
+    <div class="w-2/3 flex flex-col">
+        <div class="card card-border bg-base-100 w-100">
+          <div class="card-body">
+            <h2 class="card-title">New chat</h2>
+            <p>Untitled new chat</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Start new chat</button>
+            </div>
+         </div>
+        </div>
+    </div>
+
+    <div class="w-1/3">
+      <div id="new_message_container">
+        <%= form_with scope: "book", url: "#", method: :post do |myform| %>
+          <div>
+            <%= myform .label :title, "Title is:" %>
+            <%= myform.text_field :content %>
+          </div>
+
+          <div>
+            <%= myform.label :text, "Text is:" %>
+            <%= myform.text_area :text %>
+          </div>
+
+          <div>
+            <%= myform.label :isbn, "Isbn is:" %>
+            <%= myform.number_field :isbn %>
+          </div>
+
+          <%= myform.submit "Search" %>
+        <% end %>
+      </div>
+    </div>
+
+
+
+  </div>
+
+</div>
