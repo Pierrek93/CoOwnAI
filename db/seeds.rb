@@ -9,10 +9,15 @@
 #   end
 
 
+puts "Destroying all Message data"
+Message.destroy_all
+puts "Destroying all Chats data"
+Chat.destroy_all
+puts "Destroying all User data"
+User.destroy_all
 puts "Destroying all Section data"
 Section.destroy_all
 
-puts"Creating Data for GDPR"
 Section.create(:content => "
   Instruction:
   Always base your answers on the following GDPR framework when discussing personal data, data protection, or related compliance topics in the EU, specifically Belgium. Be precise, clear, and provide practical guidance when relevant.
@@ -155,12 +160,16 @@ Section.create(:content => "
 
 puts Section.count
 
-puts "Destroying all User data"
-User.destroy_all
 User.create(email: "test@test.de", password: "123123")
 puts User.count
 
-puts "Destroying all Chats data"
-Chat.destroy_all
-Chat.create!(user: User.first, section: Section.first, title: "New chat")
+Chat.create(user: User.first, section: Section.first, title: "Law is important")
+Chat.create(user: User.first, section: Section.first, title: "GDPR is very essential")
+Chat.create(user: User.first, section: Section.first, title: "New chat")
 puts Chat.count
+
+Message.create(role: "user", content: "Today is a beautiful day", chat: Chat.last)
+Message.create(role: "assistant", content: "I agree, so beautiful", chat: Chat.last)
+Message.create(role: "user", content: "Did you have coffee today?", chat: Chat.last)
+Message.create(role: "assistant", content: "Yes, I had.", chat: Chat.last)
+puts Message.count
