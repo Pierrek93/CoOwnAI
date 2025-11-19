@@ -10,6 +10,9 @@ class ChatsController < ApplicationController
     @chats = @section.chats.order(created_at: :desc)
   end
 
-  def create
-  end
+def create
+
+end
+
+
 end

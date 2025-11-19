@@ -56,6 +56,7 @@
 
       <%# offering forms to ask new messages to the AI %>
       <div id="new_message_container">
+        <%# chat_messages_path(@chat) OLD PATH %>
         <%= form_with scope: "ai_messages", url: chat_messages_path(@chat), method: :post do |myform| %>
           <div>
             <%= myform.label :content, "Ask your question:" %>
