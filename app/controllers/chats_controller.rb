@@ -2,11 +2,17 @@ class ChatsController < ApplicationController
 
   def show
     @chat = Chat.find(params[:id])
-    @user = @chat.user
     @section = @chat.section
+    @user = @chat.user
     @message = Message.new()
+
+    # get all the current and historic chats of the section
+    @chats = @section.chats.order(created_at: :desc)
   end
 
-  def create
-  end
+def create
+
+end
+
+
 end

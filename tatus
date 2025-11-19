@@ -1,0 +1,161 @@
+[1mdiff --git a/app/controllers/chats_controller.rb b/app/controllers/chats_controller.rb[m
+[1mindex 4149c9e..a4239c8 100644[m
+[1m--- a/app/controllers/chats_controller.rb[m
+[1m+++ b/app/controllers/chats_controller.rb[m
+[36m@@ -2,9 +2,12 @@[m [mclass ChatsController < ApplicationController[m
+ [m
+   def show[m
+     @chat = Chat.find(params[:id])[m
+[31m-    @user = @chat.user[m
+     @section = @chat.section[m
+[32m+[m[32m    @user = @chat.user[m
+     @message = Message.new()[m
+[32m+[m
+[32m+[m[32m    # get all the current and historic chats of the section[m
+[32m+[m[32m    @chats = @section.chats.order(created_at: :desc)[m
+   end[m
+ [m
+   def create[m
+[1mdiff --git a/app/models/message.rb b/app/models/message.rb[m
+[1mindex 6e36edf..a5e061f 100644[m
+[1m--- a/app/models/message.rb[m
+[1m+++ b/app/models/message.rb[m
+[36m@@ -2,6 +2,5 @@[m [mclass Message < ApplicationRecord[m
+   belongs_to :chat[m
+ [m
+   validates :role, presence: :true[m
+[31m-[m
+[31m-  # TODO: add maximum characters to be added[m
+[32m+[m[32m  validates :content, presence: :true[m
+ end[m
+[1mdiff --git a/app/views/chats/show.html.erb b/app/views/chats/show.html.erb[m
+[1mindex fabe474..2cc6927 100644[m
+[1m--- a/app/views/chats/show.html.erb[m
+[1m+++ b/app/views/chats/show.html.erb[m
+[36m@@ -5,33 +5,65 @@[m
+ [m
+   <div class="flex">[m
+     <div class="w-2/3 flex flex-col">[m
+[31m-        <div class="card card-border bg-base-100 w-100">[m
+[31m-          <div class="card-body">[m
+[31m-            <h2 class="card-title">New chat</h2>[m
+[31m-            <p>Untitled new chat</p>[m
+[31m-            <div class="card-actions justify-end">[m
+[31m-              <button class="btn btn-primary">Start new chat</button>[m
+[32m+[m
+[32m+[m[32m      <%# Iterating through all the chats including the newly created one %>[m
+[32m+[m[32m      <% if @chats.any? %>[m
+[32m+[m[32m        <% @chats.each do |chat| %>[m
+[32m+[m
+[32m+[m[32m        <%# Checking if it is the last chat to have been added to create a different layout %>[m
+[32m+[m[32m          <% if chat.id == @chats.first.id %>[m
+[32m+[m[32m            <div class="card card-border bg-base-100 w-100">[m
+[32m+[m[32m              <div class="card-body">[m
+[32m+[m[32m                <h2 class="card-title"><%= chat.title %></h2>[m
+[32m+[m[32m              </div>[m
+             </div>[m
+[31m-         </div>[m
+[31m-        </div>[m
+[32m+[m
+[32m+[m[32m          <%# Adding standard layout to all the other historic chats %>[m
+[32m+[m[32m          <% else %>[m
+[32m+[m[32m            <div class="card card-border bg-base-100 w-100">[m
+[32m+[m[32m              <div class="card-body">[m
+[32m+[m[32m                <h2 class="card-title"><%= chat.title %></h2>[m
+[32m+[m[32m                <div class="card-actions justify-end">[m
+[32m+[m[32m                  <button class="btn btn-primary">Talk to this chat</button>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m            </div>[m[41m  [m
+[32m+[m[32m          <% end %>[m[41m  [m
+[32m+[m[32m        <% end %>[m
+[32m+[m[32m      <% end %>[m
+[32m+[m
+     </div>[m
+ [m
+     <div class="w-1/3">[m
+[32m+[m[32m      <%# visualizing the messages depending on their role %>[m
+[32m+[m[32m       <div id="messages">[m
+[32m+[m[32m        <% @chat.messages.each do |message| %>[m
+[32m+[m[32m          <% if message.role == "user" %>[m
+[32m+[m[32m            <div class="flex justify-end mb-2">[m
+[32m+[m[32m              <div class="bg-white text-grey-800 px-4 py-2 rounded-2xl shadow-sm max-w-[70%]">[m
+[32m+[m[32m                <%= message.content %>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m          <% elsif message.role == "assistant" %>[m
+[32m+[m[32m            <div class="flex justify-start mb-5">[m
+[32m+[m[32m              <div class="bg-blue-100 text-grey-900 px-4 py-2 rounded-2xl shadow-sm max-w-[70%]">[m
+[32m+[m[32m                <%= message.content %>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m          <% end %>[m
+[32m+[m[32m        <% end %>[m
+[32m+[m[32m      </div>[m[41m [m
+[32m+[m
+[32m+[m[32m      <%# offering forms to ask new messages to the AI %>[m
+       <div id="new_message_container">[m
+         <%= form_with scope: "ai_messages", url: chat_messages_path(@chat), method: :post do |myform| %>[m
+           <div>[m
+[31m-            <%= myform .label :content, "Ask your question:" %>[m
+[32m+[m[32m            <%= myform.label :content, "Ask your question:" %>[m
+             <%= myform.text_field :content %>[m
+           </div>[m
+[31m-          <%= myform.submit "Ask question" %>[m
+[32m+[m[32m          <%= myform.submit "Ask question", class: "btn btn-primary" %>[m
+         <% end %>[m
+       </div>[m
+     </div>[m
+[31m-[m
+[31m-[m
+[31m-<%# test %>[m
+[31m-[m
+[31m-[m
+   </div>[m
+[31m-[m
+ </div>[m
+\ No newline at end of file[m
+[1mdiff --git a/db/seeds.rb b/db/seeds.rb[m
+[1mindex 49cb439..01d3184 100644[m
+[1m--- a/db/seeds.rb[m
+[1m+++ b/db/seeds.rb[m
+[36m@@ -9,10 +9,15 @@[m
+ #   end[m
+ [m
+ [m
+[32m+[m[32mputs "Destroying all Message data"[m
+[32m+[m[32mMessage.destroy_all[m
+[32m+[m[32mputs "Destroying all Chats data"[m
+[32m+[m[32mChat.destroy_all[m
+[32m+[m[32mputs "Destroying all User data"[m
+[32m+[m[32mUser.destroy_all[m
+ puts "Destroying all Section data"[m
+ Section.destroy_all[m
+ [m
+[31m-puts"Creating Data for GDPR"[m
+ Section.create(:content => "[m
+   Instruction:[m
+   Always base your answers on the following GDPR framework when discussing personal data, data protection, or related compliance topics in the EU, specifically Belgium. Be precise, clear, and provide practical guidance when relevant.[m
+[36m@@ -155,12 +160,16 @@[m [mSection.create(:content => "[m
+ [m
+ puts Section.count[m
+ [m
+[31m-puts "Destroying all User data"[m
+[31m-User.destroy_all[m
+ User.create(email: "test@test.de", password: "123123")[m
+ puts User.count[m
+ [m
+[31m-puts "Destroying all Chats data"[m
+[31m-Chat.destroy_all[m
+[31m-Chat.create!(user: User.first, section: Section.first, title: "New chat")[m
+[32m+[m[32mChat.create(user: User.first, section: Section.first, title: "Law is important")[m
+[32m+[m[32mChat.create(user: User.first, section: Section.first, title: "GDPR is very essential")[m
+[32m+[m[32mChat.create(user: User.first, section: Section.first, title: "New chat")[m
+ puts Chat.count[m
+[32m+[m
+[32m+[m[32mMessage.create(role: "user", content: "Today is a beautiful day", chat: Chat.last)[m
+[32m+[m[32mMessage.create(role: "assistant", content: "I agree, so beautiful", chat: Chat.last)[m
+[32m+[m[32mMessage.create(role: "user", content: "Did you have coffee today?", chat: Chat.last)[m
+[32m+[m[32mMessage.create(role: "assistant", content: "Yes, I had.", chat: Chat.last)[m
+[32m+[m[32mputs Message.count[m
+\ No newline at end of file[m
