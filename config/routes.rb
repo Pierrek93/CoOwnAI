@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
   end
 
+  # new comment 
+
+  
   # Defines the root path route ("/")
   # root "posts#index"
 end
