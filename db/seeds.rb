@@ -152,9 +152,6 @@ Section.create(:content => "
   ",
   :name => "Building Maintenance & Safety"
 )
-  Provide step-by-step instructions in bullet points, using Markdown.
-",
-:name => "GDPR")
 
 puts Section.count
 
