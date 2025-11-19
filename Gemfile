@@ -8,6 +8,9 @@ gem "rails", "~> 7.1.6"
 #devise gem to assist with sign-up and login.
 gem "devise"
 
+#Start building AI apps in Ruby in 5 minutes. Chat, generate images, create embeddings - all with one gem. [https://rubyllm.com/getting-started/]
+gem "ruby_llm", "~> 1.6.4"
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 

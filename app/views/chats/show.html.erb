@@ -18,12 +18,15 @@
 
     <div class="w-1/3">
       <div id="new_message_container">
+        <%# chat_messages_path(@chat) OLD PATH %>
         <%= form_with scope: "ai_messages", url: chat_messages_path(@chat), method: :post do |myform| %>
           <div>
             <%= myform .label :content, "Ask your question:" %>
             <%= myform.text_field :content %>
           </div>
-          <%= myform.submit "Ask question" %>
+
+            <%= myform.submit "Ask question" %>
+
         <% end %>
       </div>
     </div>
