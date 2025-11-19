@@ -9,7 +9,7 @@ gem "rails", "~> 7.1.6"
 gem "devise"
 
 #Start building AI apps in Ruby in 5 minutes. Chat, generate images, create embeddings - all with one gem. [https://rubyllm.com/getting-started/]
-gem "ruby_llm", "~> 1.6.4"
+gem "ruby_llm", "~> 1.2.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
